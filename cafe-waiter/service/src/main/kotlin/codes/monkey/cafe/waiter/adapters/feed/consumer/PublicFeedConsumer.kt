@@ -15,7 +15,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestOperations
 
-@Component
+//@Component
 class PublicFeedConsumer(
         val commandGateway: CommandGateway,
         restTemplate: RestOperations,

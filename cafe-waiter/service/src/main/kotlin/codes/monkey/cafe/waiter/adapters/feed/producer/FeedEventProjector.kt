@@ -7,25 +7,29 @@ import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.EventMessage
 import org.springframework.stereotype.Service
 
-@Service
+//@Service
 class FeedEventProjector(val feedEntryRepository: FeedEntryRepository) {
 
     @EventHandler(payloadType = OrderTakenEvent::class)
     fun on(event: EventMessage<OrderTakenEvent>) {
-        event.payload.apply {
-            feedEntryRepository.save(
-                    FeedEntry.create(
-                            entryId = event.identifier,
-                            entityId = orderId.toString(),
-                            created = event.timestamp,
-                            version = 1,
-                            payload = codes.monkey.cafe.waiter.events.OrderTakenEvent(
-                                    waiterId = waiterId,
-                                    orderId = orderId,
-                                    items = items
-                            )
-                    )
-            )
-        }
+        codes.monkey.cafe.waiter.events.OrderTakenEvent.newBuilder()
+                .setWaiterId(event.payload.waiterId.toString())
+                .setOrderId(event.payload.orderId.toString())
+
+//        event.payload.apply {
+//            feedEntryRepository.save(
+//                    FeedEntry.create(
+//                            entryId = event.identifier,
+//                            entityId = orderId.toString(),
+//                            created = event.timestamp,
+//                            version = 1,
+//                            payload = codes.monkey.cafe.waiter.events.OrderTakenEvent(
+//                                    waiterId = waiterId,
+//                                    orderId = orderId,
+//                                    items = items
+//                            )
+//                    )
+//            )
+//        }
     }
 }

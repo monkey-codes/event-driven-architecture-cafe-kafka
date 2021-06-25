@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "namespace": "codes.monkey.cafe.waiter.events",
+  "name": "Item",
+  "fields": [
+    {"name": "name", "type": "string"},
+    {"name": "quantity", "type": "int"}
+  ]
+}

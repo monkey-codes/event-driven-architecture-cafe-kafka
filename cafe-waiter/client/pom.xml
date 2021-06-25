@@ -26,6 +26,11 @@
             <artifactId>feign-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
+        <dependency>
             <groupId>codes.monkey.cafe</groupId>
             <artifactId>cafe-spring-boot-starter</artifactId>
             <optional>true</optional>
@@ -39,6 +44,95 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+<!--                <version>${confluent.version}</version>-->
+                <configuration>
+<!--                    <schemaRegistryUrls>-->
+<!--                        <param>http://127.0.0.1:8081</param>-->
+<!--                    </schemaRegistryUrls>-->
+                    <subjects>
+                        <cafe.waiter.events-value>src/main/resources/avro/PublicEvents.avsc</cafe.waiter.events-value>
+                        <item>src/main/resources/avro/Item.avsc</item>
+                        <order-taken-event>src/main/resources/avro/OrderTakenEvent.avsc</order-taken-event>
+                        <order-delivered-event>src/main/resources/avro/OrderDeliveredEvent.avsc</order-delivered-event>
+                    </subjects>
+                    <schemaTypes>
+                        <cafe.waiter.events-value>AVRO</cafe.waiter.events-value>
+                        <item>AVRO</item>
+                        <order-taken-event>AVRO</order-taken-event>
+                        <order-delivered-event>AVRO</order-delivered-event>
+                    </schemaTypes>
+                    <references>
+                        <cafe.waiter.events-value>
+                            <reference>
+                                <name>codes.monkey.cafe.waiter.events.OrderTakenEvent</name>
+                                <subject>order-taken-event</subject>
+                            </reference>
+                            <reference>
+                                <name>codes.monkey.cafe.waiter.events.OrderDeliveredEvent</name>
+                                <subject>order-delivered-event</subject>
+                            </reference>
+                        </cafe.waiter.events-value>
+                        <order-taken-event>
+                            <reference>
+                                <name>codes.monkey.cafe.waiter.events.Item</name>
+                                <subject>item</subject>
+                            </reference>
+                        </order-taken-event>
+                    </references>
+                </configuration>
+<!--                <goals>-->
+<!--                    <goal>register</goal>-->
+<!--                </goals>-->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>1.10.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+<!--                            <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>-->
+                            <imports>
+                                <import>${project.basedir}/src/main/resources/avro/Item.avsc</import>
+                            </imports>
+                            <excludes>
+                                <exclude>PublicEvents.avsc</exclude>
+                            </excludes>
+<!--                            <stringType>String</stringType>-->
+<!--                            <createSetters>false</createSetters>-->
+<!--                            <enableDecimalLogicalType>true</enableDecimalLogicalType>-->
+<!--                            <fieldVisibility>private</fieldVisibility>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--force discovery of generated classes-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+<!--                <version>3.0.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>add-source</id>-->
+<!--                        <phase>generate-sources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>add-source</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <sources>-->
+<!--                                <source>target/generated-sources/avro</source>-->
+<!--                            </sources>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
             </plugin>
         </plugins>
     </build>

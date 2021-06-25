@@ -26,6 +26,8 @@ management:
       exposure:
         include: "health,info,beans"
 
+kafka:
+  bootstrapAddress: "127.0.0.1:9092"
 atomfeed:
   server:
     page-size: 10

@@ -27,6 +27,10 @@
         <rome.version>1.12.1</rome.version>
         <java.version>11</java.version>
         <kotlin.version>1.4.31</kotlin.version>
+        <spring-kafka.version>2.7.2</spring-kafka.version>
+        <avro.version>1.10.2</avro.version>
+<!--        <confluent.version>3.3.1</confluent.version>-->
+        <confluent.version>6.2.0</confluent.version>
     </properties>
 
     <modules>
@@ -38,6 +42,19 @@
         <module>cafe-stockroom</module>
     </modules>
 
+
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <url>http://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>confluent</id>
+            <url>http://packages.confluent.io/maven/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -109,6 +126,21 @@
                 <groupId>com.willowtreeapps.assertk</groupId>
                 <artifactId>assertk-jvm</artifactId>
                 <version>0.23.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka</artifactId>
+                <version>${spring-kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-avro-serializer</artifactId>
+                <version>${confluent.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -279,6 +311,60 @@
                             <version>1.2.0</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>io.confluent</groupId>
+                    <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                    <version>${confluent.version}</version>
+                    <configuration>
+                        <schemaRegistryUrls>
+                            <param>http://127.0.0.1:8081</param>
+                        </schemaRegistryUrls>
+                    </configuration>
+                    <goals>
+                        <goal>register</goal>
+                    </goals>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro-maven-plugin</artifactId>
+                    <version>1.10.2</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>schema</goal>
+                                <!-- <goal>protocol</goal>-->
+                                <!-- <goal>idl-protocol</goal>-->
+                            </goals>
+                            <configuration>
+                                <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
+                                <stringType>String</stringType>
+                                <createSetters>false</createSetters>
+                                <enableDecimalLogicalType>true</enableDecimalLogicalType>
+                                <fieldVisibility>private</fieldVisibility>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>add-source</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>add-source</goal>
+                            </goals>
+                            <configuration>
+                                <sources>
+                                    <source>target/generated-sources/avro</source>
+                                </sources>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

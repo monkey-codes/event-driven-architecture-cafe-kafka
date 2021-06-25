@@ -1,0 +1,4 @@
+[
+  "codes.monkey.cafe.waiter.events.OrderTakenEvent",
+  "codes.monkey.cafe.waiter.events.OrderDeliveredEvent"
+]

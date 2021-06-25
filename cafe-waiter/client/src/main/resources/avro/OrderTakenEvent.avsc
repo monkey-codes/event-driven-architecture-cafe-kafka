@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "namespace": "codes.monkey.cafe.waiter.events",
+  "name": "OrderTakenEvent",
+  "fields": [
+    {"name": "waiterId", "type": "string"},
+    {"name": "orderId", "type": "string"},
+    {"name": "items", "type": {
+        "type": "array",
+        "items": {
+          "type": "codes.monkey.cafe.waiter.events.Item"
+        }
+    }
+    }
+  ]
+}
