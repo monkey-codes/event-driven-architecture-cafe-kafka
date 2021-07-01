@@ -1,0 +1,4 @@
+[
+  "codes.monkey.cafe.stockroom.events.OutOfStockEvent",
+  "codes.monkey.cafe.stockroom.events.StockroomReStockedEvent"
+]

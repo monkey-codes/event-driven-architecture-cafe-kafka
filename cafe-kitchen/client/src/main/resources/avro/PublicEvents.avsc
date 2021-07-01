@@ -1,0 +1,4 @@
+[
+  "codes.monkey.cafe.kitchen.events.OrderPreparationStartedEvent",
+  "codes.monkey.cafe.kitchen.events.OrderPreparationCompletedEvent"
+]

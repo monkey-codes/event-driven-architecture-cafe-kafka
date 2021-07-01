@@ -82,11 +82,38 @@ tasks:
       container: docker-compose
       command: docker-compose up
 
+  stop:
+    description: Stop App
+    run:
+      container: docker-compose
+      command: sh -c 'docker-compose down || true'
+
+  register-avro-schemas:
+    description: Register avro schemas
+    run:
+      container: maven
+      command: mvn schema-registry:register -Drevision=1 -Dkafka-schema-registry=http://host.docker.internal:8081 -pl :cafe-waiter-client -pl :cafe-stockroom-client -pl :cafe-kitchen-client -pl :cafe-cashier-client
+
+  kafka-start:
+    description: Run kafka cluster
+    run:
+      container: docker-compose
+      command: docker-compose -f docker-compose-kafka.yml up -d
+
+  kafka-stop:
+    description: Run kafka cluster
+    run:
+      container: docker-compose
+      command: sh -c 'docker-compose -f docker-compose-kafka.yml down || true'
   go:
     description: Do everything
     prerequisites:
+      - stop
+      - kafka-stop
+      - kafka-start
       - build-backend
       - npm-install
       - build-ui
+      - register-avro-schemas
       - dockerize
       - run

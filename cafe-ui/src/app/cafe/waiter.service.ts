@@ -12,7 +12,7 @@ export class WaiterService extends ActivityService {
     private waiterId = 'fb5cd662-2250-4a3a-bd52-456926e0f179';
 
     constructor(zone: NgZone, http: HttpClient, private snackBar: MatSnackBar) {
-        super(zone, http, 'http://localhost:8080/api');
+        super(zone, http, 'http://localhost:6080/api');
     }
 
     public placeOrder() {

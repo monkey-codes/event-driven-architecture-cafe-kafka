@@ -1,25 +1,24 @@
 package codes.monkey.cafe.waiter.adapters.kafka.producer
 
+import codes.monkey.cafe.waiter.domain.model.OrderDeliveredEvent
 import codes.monkey.cafe.waiter.domain.model.OrderTakenEvent
-import codes.monkey.cafe.waiter.domain.model.WaiterHiredEvent
 import codes.monkey.cafe.waiter.events.Item
-import codes.monkey.cafe.waiter.events.OrderDeliveredEvent
 import org.apache.avro.specific.SpecificRecordBase
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.eventhandling.EventMessage
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
-import org.springframework.kafka.annotation.KafkaListener
-
-
-
 
 @Service
-class KafkaProducer(val kafkaTemplate: KafkaTemplate<String, SpecificRecordBase>) {
+class KafkaProducer(val kafkaTemplate: KafkaTemplate<String, SpecificRecordBase>,
+                    @Value(value = "\${kafka.producer.topic}")
+                    val producerTopic: String) {
 
     @EventHandler(payloadType = OrderTakenEvent::class)
-    fun on(event: EventMessage<OrderTakenEvent>) {
+    fun onOrderTakenEvent(event: EventMessage<OrderTakenEvent>) {
         val publicEvent = codes.monkey.cafe.waiter.events.OrderTakenEvent.newBuilder()
+                .setEventId(event.identifier)
                 .setWaiterId(event.payload.waiterId.toString())
                 .setOrderId(event.payload.orderId.toString())
                 .setItems(
@@ -30,37 +29,17 @@ class KafkaProducer(val kafkaTemplate: KafkaTemplate<String, SpecificRecordBase>
                                     .build()
                         }
                 ).build()
-        kafkaTemplate.send("cafe.waiter.events", publicEvent)
+        kafkaTemplate.send(producerTopic, event.payload.waiterId.toString(), publicEvent)
     }
 
-    @EventHandler(payloadType = WaiterHiredEvent::class)
-    fun onTest(event: EventMessage<WaiterHiredEvent>) {
-        val publicEvent = codes.monkey.cafe.waiter.events.OrderTakenEvent.newBuilder()
-                .setWaiterId("testWaiterId")
-                .setOrderId("testOrderId")
-                .setItems(
-                            listOf( Item.newBuilder()
-                                    .setName("testItem")
-                                    .setQuantity(1)
-                                    .build())
-
-
-                ).build()
-        val result = kafkaTemplate.send("cafe.waiter.events", publicEvent).get()
-        println(result)
-
-        val orderDeliveredEvent = OrderDeliveredEvent.newBuilder()
-                .setWaiterId("waiter2")
-                .setOrderId("orderId2")
+    @EventHandler(payloadType = OrderDeliveredEvent::class)
+    fun onOrderDeliveredEvent(event: EventMessage<OrderDeliveredEvent>) {
+        val publicEvent = codes.monkey.cafe.waiter.events.OrderDeliveredEvent.newBuilder()
+                .setEventId(event.identifier)
+                .setWaiterId(event.payload.waiterId.toString())
+                .setOrderId(event.payload.orderId.toString())
                 .build()
-        val result1 = kafkaTemplate.send("cafe.waiter.events", orderDeliveredEvent).get()
-        println(result1)
-    }
-
-    @KafkaListener(topics = ["cafe.waiter.events"], groupId = "waiterService")
-    fun listenGroupFoo(message: SpecificRecordBase) {
-        throw Exception("oh crap")
-//        println("Received Message in group foo: $message (${message.javaClass.simpleName})")
+        kafkaTemplate.send(producerTopic, event.payload.waiterId.toString(), publicEvent)
     }
 
 }

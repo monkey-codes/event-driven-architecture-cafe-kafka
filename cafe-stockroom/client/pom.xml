@@ -22,6 +22,11 @@
             <artifactId>cafe-spring-boot-starter</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -31,6 +36,57 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <configuration>
+                    <subjects>
+                        <cafe.stockroom.events-value>src/main/resources/avro/PublicEvents.avsc</cafe.stockroom.events-value>
+                        <cafe.stockroom.out-of-stock-event>src/main/resources/avro/OutOfStockEvent.avsc</cafe.stockroom.out-of-stock-event>
+                        <cafe.stockroom.stockroom-re-stocked-event>src/main/resources/avro/StockroomReStockedEvent.avsc</cafe.stockroom.stockroom-re-stocked-event>
+                    </subjects>
+                    <schemaTypes>
+                        <cafe.waiter.events-value>AVRO</cafe.waiter.events-value>
+                        <cafe.stockroom.out-of-stock-event>AVRO</cafe.stockroom.out-of-stock-event>
+                        <cafe.stockroom.stockroom-re-stocked-event>AVRO</cafe.stockroom.stockroom-re-stocked-event>
+                    </schemaTypes>
+                    <references>
+                        <cafe.stockroom.events-value>
+                            <reference>
+                                <name>codes.monkey.cafe.stockroom.events.OutOfStockEvent</name>
+                                <subject>cafe.stockroom.out-of-stock-event</subject>
+                            </reference>
+                            <reference>
+                                <name>codes.monkey.cafe.stockroom.events.StockroomReStockedEvent</name>
+                                <subject>cafe.stockroom.stockroom-re-stocked-event</subject>
+                            </reference>
+                        </cafe.stockroom.events-value>
+                    </references>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>1.10.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>PublicEvents.avsc</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--force discovery of generated classes-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

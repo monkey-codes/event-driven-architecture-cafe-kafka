@@ -6,6 +6,9 @@ axon:
     events: jackson
     messages: jackson
 
+server:
+  port: 6080
+
 spring:
   application:
     name: waiter-service
@@ -28,6 +31,12 @@ management:
 
 kafka:
   bootstrapAddress: "127.0.0.1:9092"
+  schemaRegistryAddress: "http://127.0.0.1:8081"
+  producer:
+    topic: "cafe.waiter.events"
+  consumer:
+    group: waiterService
+
 atomfeed:
   server:
     page-size: 10

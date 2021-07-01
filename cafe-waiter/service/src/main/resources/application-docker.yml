@@ -7,3 +7,11 @@ atomfeed:
       - cron: "*/1 * * * * *"
         # stockroom feed
         url: "http://stockroom:8082/feed"
+
+kafka:
+  bootstrapAddress: "host.docker.internal:9092"
+  schemaRegistryAddress: "http://host.docker.internal:8081"
+  producer:
+    topic: "cafe.waiter.events"
+  consumer:
+    group: waiterService

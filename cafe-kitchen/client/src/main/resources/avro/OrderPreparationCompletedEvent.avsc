@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "namespace": "codes.monkey.cafe.kitchen.events",
+  "name": "OrderPreparationCompletedEvent",
+  "fields": [
+    {"name": "eventId", "type": "string"},
+    {"name": "cookId", "type": "string"},
+    {"name": "orderId", "type": "string"},
+    {"name": "waiterId", "type": "string"}
+  ]
+}

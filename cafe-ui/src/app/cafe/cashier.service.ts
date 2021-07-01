@@ -8,6 +8,6 @@ import {ActivityService} from './activity.service';
 export class CashierService extends ActivityService {
 
     constructor(zone: NgZone, http: HttpClient) {
-        super(zone, http, 'http://localhost:8083/api');
+        super(zone, http, 'http://localhost:6083/api');
     }
 }

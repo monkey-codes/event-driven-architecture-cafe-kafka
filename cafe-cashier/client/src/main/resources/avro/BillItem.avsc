@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "namespace": "codes.monkey.cafe.cashier.events",
+  "name": "BillItem",
+  "fields": [
+    {"name": "name", "type": "string"},
+    {"name": "quantity", "type": "int"},
+    {"name": "total", "type": "int"}
+  ]
+}

@@ -6,3 +6,10 @@ atomfeed:
         url: "http://waiter:8080/feed"
 
 
+kafka:
+  bootstrapAddress: "host.docker.internal:9092"
+  schemaRegistryAddress: "http://host.docker.internal:8081"
+  producer:
+    topic: "cafe.cashier.events"
+  consumer:
+    group: cashierService

@@ -1,5 +1,6 @@
 package codes.monkey.cafe.waiter.config
 
+import codes.monkey.cafe.starter.EnableKafkaEventIntegration
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import io.confluent.kafka.serializers.KafkaAvroSerializer
@@ -31,64 +32,70 @@ import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.listener.SeekToCurrentErrorHandler
 
 
-@EnableKafka
 @Configuration
+@EnableKafkaEventIntegration
 class KafkaConfig {
 
-    @Value(value = "\${kafka.bootstrapAddress}")
-    private val bootstrapAddress: String? = null
-
-    @Bean
-    fun kafkaAdmin(): KafkaAdmin? {
-        val configs: MutableMap<String, Any> = HashMap()
-        configs[AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress!!
-        configs[AbstractKafkaSchemaSerDeConfig.AUTO_REGISTER_SCHEMAS] = false
-        configs[AbstractKafkaSchemaSerDeConfig.USE_LATEST_VERSION] =  true
-        return KafkaAdmin(configs)
-    }
-
-    @Bean
-    fun publicEvents(): NewTopic {
-        return NewTopic("cafe.waiter.events", 1, 1.toShort())
-    }
-
-    @Bean
-    fun producerFactory(): ProducerFactory<String, SpecificRecordBase> {
-        val configProps: MutableMap<String, Any> = HashMap()
-        configProps[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress!!
-        configProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
-        configProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
-        configProps[AbstractKafkaSchemaSerDeConfig.AUTO_REGISTER_SCHEMAS] = false
-        configProps[AbstractKafkaSchemaSerDeConfig.USE_LATEST_VERSION] =  true
-        configProps[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] =  "http://127.0.0.1:8081"
-        return DefaultKafkaProducerFactory(configProps)
-    }
-
-    @Bean
-    fun kafkaTemplate(): KafkaTemplate<String, SpecificRecordBase> {
-        return KafkaTemplate(producerFactory())
-    }
-
-    @Bean
-    fun consumerFactory(): ConsumerFactory<String, SpecificRecordBase> {
-        val props: MutableMap<String, Any> = HashMap()
-        props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress!!
-        props[ConsumerConfig.GROUP_ID_CONFIG] = "waiterService"
-        props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
-        props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
-        props[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] =  "http://127.0.0.1:8081"
-        props["specific.avro.reader"] = true
-        props["auto.offset.reset"] =  "earliest"
-        return DefaultKafkaConsumerFactory(props)
-    }
-
-    @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase> {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase>()
-        factory.consumerFactory = consumerFactory()
-        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
-        factory.setErrorHandler(SeekToCurrentErrorHandler())
-        return factory
-    }
+//    @Value(value = "\${kafka.bootstrapAddress}")
+//    private val bootstrapAddress: String? = null
+//
+//    @Value(value = "\${kafka.schemaRegistryAddress}")
+//    private val schemaRegistryAddress: String? = null
+//
+//    @Value(value = "\${kafka.producer.topic}")
+//    private val producerTopic: String? = null
+//
+//    @Bean
+//    fun kafkaAdmin(): KafkaAdmin? {
+//        val configs: MutableMap<String, Any> = HashMap()
+//        configs[AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress!!
+//        configs[AbstractKafkaSchemaSerDeConfig.AUTO_REGISTER_SCHEMAS] = false
+//        configs[AbstractKafkaSchemaSerDeConfig.USE_LATEST_VERSION] =  true
+//        return KafkaAdmin(configs)
+//    }
+//
+//    @Bean
+//    fun publicEvents(): NewTopic {
+//        return NewTopic(producerTopic!!, 1, 1.toShort())
+//    }
+//
+//    @Bean
+//    fun producerFactory(): ProducerFactory<String, SpecificRecordBase> {
+//        val configProps: MutableMap<String, Any> = HashMap()
+//        configProps[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress!!
+//        configProps[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+//        configProps[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = KafkaAvroSerializer::class.java
+//        configProps[AbstractKafkaSchemaSerDeConfig.AUTO_REGISTER_SCHEMAS] = false
+//        configProps[AbstractKafkaSchemaSerDeConfig.USE_LATEST_VERSION] =  true
+//        configProps[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = schemaRegistryAddress!!
+//        return DefaultKafkaProducerFactory(configProps)
+//    }
+//
+//    @Bean
+//    fun kafkaTemplate(): KafkaTemplate<String, SpecificRecordBase> {
+//        return KafkaTemplate(producerFactory())
+//    }
+//
+//    @Bean
+//    fun consumerFactory(): ConsumerFactory<String, SpecificRecordBase> {
+//        val props: MutableMap<String, Any> = HashMap()
+//        props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapAddress!!
+//        props[ConsumerConfig.GROUP_ID_CONFIG] = "waiterService"
+//        props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+//        props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
+//        props[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = schemaRegistryAddress!!
+//        props["specific.avro.reader"] = true
+//        props["auto.offset.reset"] =  "earliest"
+//        return DefaultKafkaConsumerFactory(props)
+//    }
+//
+//    @Bean
+//    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase> {
+//        val factory = ConcurrentKafkaListenerContainerFactory<String, SpecificRecordBase>()
+//        factory.consumerFactory = consumerFactory()
+//        factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+//        factory.setErrorHandler(SeekToCurrentErrorHandler())
+//        return factory
+//    }
 
 }

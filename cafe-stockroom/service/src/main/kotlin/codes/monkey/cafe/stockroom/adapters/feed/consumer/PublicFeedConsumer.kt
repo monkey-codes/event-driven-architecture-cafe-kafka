@@ -11,26 +11,26 @@ import io.micrometer.core.instrument.MeterRegistry
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestOperations
-
-@Component
-class PublicFeedConsumer(
-        val commandGateway: CommandGateway,
-        restTemplate: RestOperations,
-        meterRegistry: MeterRegistry
-
-) : EventConsumerTemplate(
-        restTemplate,
-        meterRegistry,
-        EventVersion("OrderPreparationStartedEvent", 1, OrderPreparationStartedEvent::class.java)
-) {
-    override fun consume(entryMapping: EntryMapping) {
-        val (_, event) = entryMapping
-        when (event) {
-            is OrderPreparationStartedEvent -> commandGateway.sendAndWait<Any>(UseStockCommand(
-                    id = StockroomConstants.STOCKROOM_ID,
-                    stock = event.items.map { Item(name = it.name, quantity = it.quantity) }
-            ))
-        }
-    }
-
-}
+//
+//@Component
+//class PublicFeedConsumer(
+//        val commandGateway: CommandGateway,
+//        restTemplate: RestOperations,
+//        meterRegistry: MeterRegistry
+//
+//) : EventConsumerTemplate(
+//        restTemplate,
+//        meterRegistry,
+//        EventVersion("OrderPreparationStartedEvent", 1, OrderPreparationStartedEvent::class.java)
+//) {
+//    override fun consume(entryMapping: EntryMapping) {
+//        val (_, event) = entryMapping
+//        when (event) {
+//            is OrderPreparationStartedEvent -> commandGateway.sendAndWait<Any>(UseStockCommand(
+//                    id = StockroomConstants.STOCKROOM_ID,
+//                    stock = event.items.map { Item(name = it.name, quantity = it.quantity) }
+//            ))
+//        }
+//    }
+//
+//}

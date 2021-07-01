@@ -5,3 +5,10 @@ atomfeed:
         url: "http://kitchen:8081/feed"
 
 
+kafka:
+  bootstrapAddress: "host.docker.internal:9092"
+  schemaRegistryAddress: "http://host.docker.internal:8081"
+  producer:
+    topic: "cafe.stockroom.events"
+  consumer:
+    group: stockroomService

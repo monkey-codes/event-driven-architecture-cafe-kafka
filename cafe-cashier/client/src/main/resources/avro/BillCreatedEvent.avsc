@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "namespace": "codes.monkey.cafe.cashier.events",
+  "name": "BillCreatedEvent",
+  "fields": [
+    {"name": "eventId", "type": "string"},
+    {"name": "orderId", "type": "string"},
+    {"name": "items", "type": {
+      "type": "array",
+      "items": {
+        "type": "codes.monkey.cafe.cashier.events.BillItem"
+      }
+    }
+    }
+  ]
+}

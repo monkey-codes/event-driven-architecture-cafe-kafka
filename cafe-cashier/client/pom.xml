@@ -22,6 +22,11 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+			<version>${avro.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>codes.monkey.cafe</groupId>
 			<artifactId>cafe-spring-boot-starter</artifactId>
 			<optional>true</optional>
@@ -35,6 +40,61 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.confluent</groupId>
+				<artifactId>kafka-schema-registry-maven-plugin</artifactId>
+				<configuration>
+					<subjects>
+						<cafe.cashier.events-value>src/main/resources/avro/PublicEvents.avsc</cafe.cashier.events-value>
+						<cafe.cashier.bill-item>src/main/resources/avro/BillItem.avsc</cafe.cashier.bill-item>
+						<cafe.cashier.bill-created-event>src/main/resources/avro/BillCreatedEvent.avsc</cafe.cashier.bill-created-event>
+					</subjects>
+					<schemaTypes>
+						<cafe.cashier.events-value>AVRO</cafe.cashier.events-value>
+						<cafe.cashier.bill-item>AVRO</cafe.cashier.bill-item>
+						<cafe.cashier.bill-created-event>AVRO</cafe.cashier.bill-created-event>
+					</schemaTypes>
+					<references>
+						<cafe.cashier.events-value>
+							<reference>
+								<name>codes.monkey.cafe.cashier.events.BillCreatedEvent</name>
+								<subject>cafe.cashier.bill-created-event</subject>
+							</reference>
+						</cafe.cashier.events-value>
+						<cafe.cashier.bill-created-event>
+							<reference>
+								<name>codes.monkey.cafe.cashier.events.BillItem</name>
+								<subject>cafe.cashier.bill-item</subject>
+							</reference>
+						</cafe.cashier.bill-created-event>
+					</references>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.avro</groupId>
+				<artifactId>avro-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>schema</goal>
+						</goals>
+						<configuration>
+							<imports>
+								<import>${project.basedir}/src/main/resources/avro/BillItem.avsc</import>
+							</imports>
+							<excludes>
+								<exclude>PublicEvents.avsc</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!--force discovery of generated classes-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

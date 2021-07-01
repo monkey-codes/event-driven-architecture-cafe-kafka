@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "namespace": "codes.monkey.cafe.stockroom.events",
+  "name": "StockroomReStockedEvent",
+  "fields": [
+    {"name": "eventId", "type": "string"},
+    {"name": "newStock", "type": { "type": "array", "items": "string"} }
+  ]
+}

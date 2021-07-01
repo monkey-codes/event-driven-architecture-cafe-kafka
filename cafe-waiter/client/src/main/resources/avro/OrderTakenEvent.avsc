@@ -3,6 +3,7 @@
   "namespace": "codes.monkey.cafe.waiter.events",
   "name": "OrderTakenEvent",
   "fields": [
+    {"name": "eventId", "type": "string"},
     {"name": "waiterId", "type": "string"},
     {"name": "orderId", "type": "string"},
     {"name": "items", "type": {

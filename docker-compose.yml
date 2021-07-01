@@ -4,22 +4,22 @@ services:
     image: monkeycodes/cafe-waiter
     container_name: waiter
     ports:
-      - 8080:8080
+      - 6080:6080
   kitchen:
     image: monkeycodes/cafe-kitchen
     container_name: kitchen
     ports:
-      - 8081:8081
+      - 6081:6081
   stockroom:
     image: monkeycodes/cafe-stockroom
     container_name: stockroom
     ports:
-      - 8082:8082
+      - 6082:6082
   cashier:
     image: monkeycodes/cafe-cashier
     container_name: cashier
     ports:
-      - 8083:8083
+      - 6083:6083
   ui:
     image: monkeycodes/cafe-ui
     container_name: ui

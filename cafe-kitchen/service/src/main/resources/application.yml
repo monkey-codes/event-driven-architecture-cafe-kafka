@@ -7,7 +7,7 @@ axon:
     messages: jackson
 
 server:
-  port: 8081
+  port: 6081
 
 spring:
   application:
@@ -29,6 +29,14 @@ management:
     web:
       exposure:
         include: "health,info,beans"
+
+kafka:
+  bootstrapAddress: "127.0.0.1:9092"
+  schemaRegistryAddress: "http://127.0.0.1:8081"
+  producer:
+    topic: "cafe.kitchen.events"
+  consumer:
+    group: kitchenService
 
 atomfeed:
   server:

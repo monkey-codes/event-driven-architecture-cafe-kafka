@@ -11,26 +11,26 @@ import io.micrometer.core.instrument.MeterRegistry
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestOperations
-
-@Component
-class PublicFeedConsumer(
-        val commandGateway: CommandGateway,
-        restTemplate: RestOperations,
-        meterRegistry: MeterRegistry
-
-) : EventConsumerTemplate(
-        restTemplate,
-        meterRegistry,
-        EventVersion("OrderTakenEvent", 1, OrderTakenEvent::class.java)
-) {
-    override fun consume(entryMapping: EntryMapping) {
-        val (_, event) = entryMapping
-        when (event) {
-            is OrderTakenEvent -> commandGateway.sendAndWait<Any>(QueueOrderCommand(queueId = KitchenConstants.ORDER_QUEUE_ID,
-                    orderId = event.orderId,
-                    waiterId = event.waiterId,
-                    items = event.items.map { it.toKitchenItem() }))
-        }
-    }
-
-}
+//
+//@Component
+//class PublicFeedConsumer(
+//        val commandGateway: CommandGateway,
+//        restTemplate: RestOperations,
+//        meterRegistry: MeterRegistry
+//
+//) : EventConsumerTemplate(
+//        restTemplate,
+//        meterRegistry,
+//        EventVersion("OrderTakenEvent", 1, OrderTakenEvent::class.java)
+//) {
+//    override fun consume(entryMapping: EntryMapping) {
+//        val (_, event) = entryMapping
+//        when (event) {
+//            is OrderTakenEvent -> commandGateway.sendAndWait<Any>(QueueOrderCommand(queueId = KitchenConstants.ORDER_QUEUE_ID,
+//                    orderId = event.orderId,
+//                    waiterId = event.waiterId,
+//                    items = event.items.map { it.toKitchenItem() }))
+//        }
+//    }
+//
+//}

@@ -18,6 +18,11 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+			<version>${avro.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>codes.monkey.cafe</groupId>
 			<artifactId>cafe-spring-boot-starter</artifactId>
 			<optional>true</optional>
@@ -31,6 +36,68 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.confluent</groupId>
+				<artifactId>kafka-schema-registry-maven-plugin</artifactId>
+				<configuration>
+					<subjects>
+						<cafe.kitchen.events-value>src/main/resources/avro/PublicEvents.avsc</cafe.kitchen.events-value>
+						<cafe.kitchen.item>src/main/resources/avro/Item.avsc</cafe.kitchen.item>
+						<cafe.kitchen.order-preparation-started-event>src/main/resources/avro/OrderPreparationStartedEvent.avsc</cafe.kitchen.order-preparation-started-event>
+						<cafe.kitchen.order-preparation-completed-event>src/main/resources/avro/OrderPreparationCompletedEvent.avsc</cafe.kitchen.order-preparation-completed-event>
+					</subjects>
+					<schemaTypes>
+						<cafe.kitchen.events-value>AVRO</cafe.kitchen.events-value>
+						<cafe.kitchen.item>AVRO</cafe.kitchen.item>
+						<cafe.kitchen.order-preparation-started-event>AVRO</cafe.kitchen.order-preparation-started-event>
+						<cafe.kitchen.order-preparation-completed-event>AVRO</cafe.kitchen.order-preparation-completed-event>
+					</schemaTypes>
+					<references>
+						<cafe.kitchen.events-value>
+							<reference>
+								<name>codes.monkey.cafe.kitchen.events.OrderPreparationStartedEvent</name>
+								<subject>cafe.kitchen.order-preparation-started-event</subject>
+							</reference>
+							<reference>
+								<name>codes.monkey.cafe.kitchen.events.OrderPreparationCompletedEvent</name>
+								<subject>cafe.kitchen.order-preparation-completed-event</subject>
+							</reference>
+						</cafe.kitchen.events-value>
+						<cafe.kitchen.order-preparation-started-event>
+							<reference>
+								<name>codes.monkey.cafe.kitchen.events.Item</name>
+								<subject>cafe.kitchen.item</subject>
+							</reference>
+						</cafe.kitchen.order-preparation-started-event>
+					</references>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.avro</groupId>
+				<artifactId>avro-maven-plugin</artifactId>
+				<version>1.10.2</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>schema</goal>
+						</goals>
+						<configuration>
+							<imports>
+								<import>${project.basedir}/src/main/resources/avro/Item.avsc</import>
+							</imports>
+							<excludes>
+								<exclude>PublicEvents.avsc</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!--force discovery of generated classes-->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
