@@ -37,15 +37,3 @@ kafka:
     topic: "cafe.kitchen.events"
   consumer:
     group: kitchenService
-
-atomfeed:
-  server:
-    page-size: 10
-    title: Kitchen Service Event Feed
-    author: Monkey Codes
-  client:
-    schedules:
-      - cron: "*/1 * * * * *"
-        url: "http://localhost:8080/feed"
-
-

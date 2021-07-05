@@ -37,15 +37,3 @@ kafka:
     topic: "cafe.stockroom.events"
   consumer:
     group: stockroomService
-
-atomfeed:
-  server:
-    page-size: 10
-    title: Stockroom Service Event Feed
-    author: Monkey Codes
-  client:
-    schedules:
-      - cron: "*/1 * * * * *"
-        url: "http://localhost:8081/feed"
-
-

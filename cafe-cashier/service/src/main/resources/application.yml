@@ -37,16 +37,3 @@ kafka:
     topic: "cafe.cashier.events"
   consumer:
     group: cashierService
-
-atomfeed:
-  server:
-    page-size: 10
-    title: Cashier Service Event Feed
-    author: Monkey Codes
-  client:
-    schedules:
-      - cron: "*/1 * * * * *"
-        # waiter feed
-        url: "http://localhost:8080/feed"
-
-

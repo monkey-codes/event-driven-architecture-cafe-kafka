@@ -1,12 +1,3 @@
-atomfeed:
-  client:
-    schedules:
-      - cron: "*/1 * * * * *"
-        # kitchen feed
-        url: "http://kitchen:8081/feed"
-      - cron: "*/1 * * * * *"
-        # stockroom feed
-        url: "http://stockroom:8082/feed"
 
 kafka:
   bootstrapAddress: "host.docker.internal:9092"

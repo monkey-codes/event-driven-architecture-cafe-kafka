@@ -3,7 +3,6 @@ package codes.monkey.cafe.waiter.adapters.api.commands
 import assertk.assertThat
 import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
-import codes.monkey.cafe.starter.feed.producer.FeedController
 import codes.monkey.cafe.test.MockMvcFeignClient
 import codes.monkey.cafe.test.asyncDispatch
 import codes.monkey.cafe.waiter.api.WaiterClient
@@ -32,7 +31,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -46,8 +44,6 @@ import java.util.concurrent.CompletableFuture.completedFuture
 @WebMvcTest(controllers = [WaiterController::class])
 internal class WaiterControllerTest {
 
-    @MockBean
-    lateinit var feedController: FeedController
 
     @TestConfiguration
     class TestConfig {

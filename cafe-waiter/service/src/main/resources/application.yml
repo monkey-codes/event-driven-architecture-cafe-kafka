@@ -36,17 +36,3 @@ kafka:
     topic: "cafe.waiter.events"
   consumer:
     group: waiterService
-
-atomfeed:
-  server:
-    page-size: 10
-    title: Waiter Service Event Feed
-    author: Monkey Codes
-  client:
-    schedules:
-      - cron: "*/1 * * * * *"
-        # kitchen feed
-        url: "http://localhost:8081/feed"
-      - cron: "*/1 * * * * *"
-        # stockroom feed
-        url: "http://localhost:8082/feed"
